@@ -1,0 +1,117 @@
+
+                                              ####Schema for the Knowledge Graph
+
+@prefix ds: <http://demo.staple-api.org/ontology.ttl#> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix schema: <http://schema.org/> .  
+
+
+
+# classes (-> GraphQL types )
+
+owl:Thing a rdfs:Class ;
+    rdfs:comment "Anything" .
+
+dbo:AnswerComparison a rdfs:Class ;
+    rdfs:comment "Comparing the answer" ;
+    rdfs:subClassOf owl:Thing .
+
+dbo:Goal a rdfs:Class ;
+    rdfs:comment "goal for the answer" ;
+    rdfs:subClassOf owl:Thing . 
+
+dbo:PromptWithHints a rdfs:Class ;
+    rdfs:comment "no matched answer" ;
+    rdfs:subClassOf owl:Thing .
+
+    
+# properties ( -> GraphQL fields )
+
+
+# for AnswerComparison
+
+rdfs:question a rdf:Property, owl:FunctionalProperty ;
+    rdfs:comment "Question for the answer" ;
+    schema:domainIncludes owl:Thing ;
+    schema:rangeIncludes xsd:string .
+ds:isGoal a rdf:Property ;
+    rdfs:comment "Goal for the question" ;
+    schema:domainIncludes dbo:AnswerComparison ;
+    schema:rangeIncludes dbo:Goal .
+
+
+# for Goal
+
+rdfs:step a rdf:Property, owl:FunctionalProperty ;
+    rdfs:comment "Step for the goal" ;
+    schema:domainIncludes dbo:Goal ;
+    schema:rangeIncludes xsd:string . 
+
+rdfs:task a rdf:Property, owl:FunctionalProperty ;
+    rdfs:comment "task for the goal" ;
+    schema:domainIncludes dbo:Goal ;
+    schema:rangeIncludes xsd:string . 
+
+rdfs:solution a rdf:Property, owl:FunctionalProperty ;
+    rdfs:comment "solution for the goal" ;
+    schema:domainIncludes dbo:Goal ;
+    schema:rangeIncludes xsd:string . 
+
+rdfs:generalHint a rdf:Property, owl:FunctionalProperty ;
+    rdfs:comment "Genereal hint for the CT-general hints" ;
+    schema:domainIncludes dbo:Goal ;
+    schema:rangeIncludes xsd:string .
+
+ds:hintGenerate a rdf:Property ;
+    rdfs:comment "hint sequence for the question" ;
+    schema:domainIncludes dbo:Goal ;
+    schema:rangeIncludes dbo:PromptWithHints .
+
+ds:hintnotMatched a rdf:Property ;
+    rdfs:comment "no matched hints" ;
+    schema:domainIncludes dbo:Goal ;
+    schema:rangeIncludes dbo:PromptWithHints .
+
+ds:problem a rdf:Property ;
+    rdfs:comment "no matched hints" ;
+    schema:domainIncludes dbo:Goal ;
+    schema:rangeIncludes dbo:AnswerComparison .
+
+
+# for PromptWithHints
+
+rdfs:answerCorrect a rdf:Property, owl:FunctionalProperty ;
+    rdfs:comment "check whether alternative answer is correct" ;
+    schema:domainIncludes dbo:PromptWithHints ;
+    schema:rangeIncludes xsd:string .
+
+rdfs:altAnswer a rdf:Property, owl:FunctionalProperty ;
+    rdfs:comment "Alternative answer" ;
+    schema:domainIncludes dbo:PromptWithHints ;
+    schema:rangeIncludes xsd:string .
+
+rdfs:prompt a rdf:Property, owl:FunctionalProperty ;
+    rdfs:comment "Prompt for the alternative answer" ;
+    schema:domainIncludes dbo:PromptWithHints ;
+    schema:rangeIncludes xsd:string .
+
+rdfs:basicHint a rdf:Property, owl:FunctionalProperty ;
+    rdfs:comment "problem-specific hint with little elaboration" ;
+    schema:domainIncludes dbo:PromptWithHints ;
+    schema:rangeIncludes xsd:string .
+
+rdfs:intermediateHint a rdf:Property, owl:FunctionalProperty ;
+    rdfs:comment "problem-specific hint with more elaboration" ;
+    schema:domainIncludes dbo:PromptWithHints ;
+    schema:rangeIncludes xsd:string .
+        
+rdfs:altHint a rdf:Property, owl:FunctionalProperty ;
+    rdfs:comment "Alternative hint" ;
+    schema:domainIncludes dbo:PromptWithHints ;
+    schema:rangeIncludes xsd:string .
